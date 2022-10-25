@@ -85,9 +85,9 @@ const HotelConfirm = () => {
       "hotel-booking-confirm-details",
       JSON.stringify(bookingObj)
     );
-    const localstorageobj = localStorage.getItem(
-      "hotel-booking-confirm-details"
-    );
+    // const localstorageobj = localStorage.getItem(
+    //   "hotel-booking-confirm-details"
+    // );
     // console.log(localstorageobj);
     // axios
     //   .post(

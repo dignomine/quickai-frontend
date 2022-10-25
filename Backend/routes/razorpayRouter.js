@@ -14,7 +14,7 @@ const razorpay = new Razorpay({
 router.get("/order/:amount", (req, res) => {
   try {
     const options = {
-      amount: parseInt(req.params.amount) * 100,
+      amount: +(parseInt(req.params.amount) * 100),
       currency: "INR",
       receipt: "receipt#1",
       payment_capture: 1, //1

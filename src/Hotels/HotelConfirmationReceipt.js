@@ -37,15 +37,15 @@ const HotelConfirmationReceipt = (props) => {
 
     setHotelBookingDetails([hotelBookingDetailsFun]);
     setHotelSearchOptions([hotelSearchOptionsFun]);
-    // console.log(
-    //   hotelBookingDetails?.HotelRoomsDetails[0]?.HotelPassenger[0]?.Title
-    // );
+    console.log(
+      hotelBookingDetails?.HotelRoomsDetails[0]?.HotelPassenger[0]?.Title
+    );
     setPropsData(props.location.state);
-    console.log(props.location.state);
   }
 
   useEffect(() => {
     gettingData();
+    console.log(props.location.state);
   }, []);
 
   return (

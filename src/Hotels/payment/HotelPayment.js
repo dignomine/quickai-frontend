@@ -7,6 +7,7 @@ import { useHistory } from "react-router-dom";
 
 const HotelPayment = (props) => {
   const history = useHistory();
+  const [token, setToken] = useState("");
 
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -206,7 +207,10 @@ const HotelPayment = (props) => {
   };
 
   const bookingConfirmation = async (orderid) => {
-    console.log(props.location.state.bookingObj);
+    console.log(
+      props.location.state.bookingObj.TokenId,
+      props.location.state.bookingObj.EndUserIp
+    );
 
     const data = await axios.post(
       "/BookingEngineService_Hotel/hotelservice.svc/rest/Book/",
@@ -215,13 +219,23 @@ const HotelPayment = (props) => {
       }
     );
 
-    history.push({
-      pathname: "/hotelbill",
-      state: {
-        bookingReceipt: data.data,
-        orderId: orderid
-      },
-    });
+    if (data.data?.Status === 1) {
+      const bookingDetailsObject = await axios.post(
+        "/BookingEngineService_Hotel/HotelService.svc/rest/GetBookingDetail/",
+        {
+          EndUserIp: props.location.state.bookingObj.EndUserIp,
+          TokenId: props.location.state.bookingObj.TokenId,
+          BookingId: data.data?.BookingId,
+        }
+      );
+      history.push({
+        pathname: "/hotelbill",
+        state: {
+          bookingReceipt: bookingDetailsObject.data,
+          orderId: orderid,
+        },
+      });
+    }
   };
 
   useEffect(() => {
