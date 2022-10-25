@@ -219,23 +219,69 @@ const HotelPayment = (props) => {
       }
     );
 
-    if (data.data?.Status === 1) {
-      const bookingDetailsObject = await axios.post(
-        "/BookingEngineService_Hotel/HotelService.svc/rest/GetBookingDetail/",
-        {
-          EndUserIp: props.location.state.bookingObj.EndUserIp,
-          TokenId: props.location.state.bookingObj.TokenId,
-          BookingId: data.data?.BookingId,
-        }
-      );
-      history.push({
-        pathname: "/hotelbill",
-        state: {
-          bookingReceipt: bookingDetailsObject.data,
-          orderId: orderid,
+    console.log(data.data?.BookResult?.Status);
+
+    const bookingDetailsObject = await axios.post(
+      "/BookingEngineService_Hotel/HotelService.svc/rest/GetBookingDetail/",
+      {
+        EndUserIp: props.location.state.bookingObj.EndUserIp,
+        TokenId: props.location.state.bookingObj.TokenId,
+        BookingId: data.data?.BookResult?.BookingId,
+      }
+    );
+
+    const saveBookingToDatabase = await axios.post(
+      "http://localhost:8000/booking/hotel",
+      {
+        Status:
+          bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult?.Status,
+        HotelBookingStatus:
+          bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+            ?.HotelBookingStatus,
+        ConfirmationNo:
+          bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+            ?.ConfirmationNo,
+        BookingRefNo:
+          bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+            ?.BookingRefNo,
+        BookingId:
+          bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+            ?.BookingId,
+        TravellerDetails: {
+          firstname:
+            bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+              ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.FirstName,
+          middlename:
+            bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+              ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.MiddleName,
+          lastname:
+            bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+              ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.LastName,
+          email:
+            bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+              ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.Email,
+          phoneNumber:
+            bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+              ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.Phoneno,
         },
-      });
-    }
+      }
+    );
+
+    console.log(saveBookingToDatabase);
+
+    history.push({
+      pathname: "/hotelbill",
+      state: {
+        bookingReceipt: bookingDetailsObject.data,
+        orderId: orderid,
+      },
+    });
+
+    // if (data.data?.Status === 1) {
+
+    // } else {
+    //   return alert("Error");
+    // }
   };
 
   useEffect(() => {

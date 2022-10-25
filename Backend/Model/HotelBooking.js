@@ -16,8 +16,6 @@ const hotelBookingSchema = new mongoose.Schema(
       unique: true,
     },
     BookingId: Number,
-    IsPriceChanged: Boolean,
-    IsCancellationPolicyChanged: Boolean,
     // Owner: {
     //   type: mongoose.Schema.Types.ObjectId,
     //   ref: "User",
@@ -27,9 +25,13 @@ const hotelBookingSchema = new mongoose.Schema(
         type: String,
         default: "",
       },
+      middlename: {
+        type: String,
+        default: null,
+      },
       lastname: {
         type: String,
-        default: "",
+        default: null,
       },
       email: {
         type: String,

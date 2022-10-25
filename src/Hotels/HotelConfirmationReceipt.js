@@ -5,11 +5,14 @@ import jsPDF from "jspdf";
 import pdfMake from "pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import htmlToPdfmake from "html-to-pdfmake";
+import axios from "axios";
 
 const HotelConfirmationReceipt = (props) => {
   const [propsData, setPropsData] = useState();
   const [hotelBookingDetails, setHotelBookingDetails] = useState([]);
   const [hotelSearchOptions, setHotelSearchOptions] = useState([]);
+  const [hotelBookingData, setHotelBookingData] = useState([]);
+  const [markup, setMarkup] = useState(0);
 
   function printDocument() {
     const doc = new jsPDF();
@@ -43,9 +46,22 @@ const HotelConfirmationReceipt = (props) => {
     setPropsData(props.location.state);
   }
 
+  const getMarkup = async () => {
+    axios.get("http://localhost:8000/getmarkup").then((response) => {
+      console.log("markup", response);
+      if (response.data.length == 0) {
+        setMarkup(0);
+      } else {
+        setMarkup(response.data[0].Amount);
+      }
+    });
+  };
+
   useEffect(() => {
-    gettingData();
+    // gettingData();
     console.log(props.location.state);
+    getMarkup();
+    setHotelBookingData([props.location.state]);
   }, []);
 
   return (
@@ -66,27 +82,37 @@ const HotelConfirmationReceipt = (props) => {
         <table>
           <tr>
             <td>Invoice Number</td>
-            <td>{propsData?.bookingReceipt?.BookResult?.InvoiceNumber}</td>
+            <td>
+              {
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.InvoiceNo
+              }
+            </td>
           </tr>
           <tr>
             <td>Name</td>
             <td>
-              {hotelBookingDetails[0]?.HotelRoomsDetails[0]?.HotelPassenger[0]
-                ?.Title +
-                " " +
-                hotelBookingDetails[0]?.HotelRoomsDetails[0]?.HotelPassenger[0]
-                  ?.FirstName +
-                " " +
-                hotelBookingDetails[0]?.HotelRoomsDetails[0]?.HotelPassenger[0]
-                  ?.LastName}
+              {`${
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.FirstName
+              } ${
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.MiddleName !== null
+                  ? hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                      ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.MiddleName
+                  : ""
+              } ${
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.LastName
+              }`}
             </td>
           </tr>
           <tr>
             <td>E-mail</td>
             <td>
               {
-                hotelBookingDetails[0]?.HotelRoomsDetails[0]?.HotelPassenger[0]
-                  ?.Email
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.Email
               }
             </td>
           </tr>
@@ -94,8 +120,8 @@ const HotelConfirmationReceipt = (props) => {
             <td>Phone Number</td>
             <td>
               {
-                hotelBookingDetails[0]?.HotelRoomsDetails[0]?.HotelPassenger[0]
-                  ?.Phoneno
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.Phoneno
               }
             </td>
           </tr>
@@ -105,19 +131,34 @@ const HotelConfirmationReceipt = (props) => {
         </tr> */}
           <tr>
             <td>Order ID</td>
-            <td>{props.location.state.orderId}</td>
+            <td>{hotelBookingData[0]?.orderId}</td>
           </tr>
           <tr>
             <td>Booking ID</td>
-            <td>{propsData?.bookingReceipt?.BookResult?.BookingId}</td>
+            <td>
+              {
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.BookingId
+              }
+            </td>
           </tr>
           <tr>
             <td>Booking Refrence Number</td>
-            <td>{propsData?.bookingReceipt?.BookResult?.BookingRefNo}</td>
+            <td>
+              {
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.BookingRefNo
+              }
+            </td>
           </tr>
           <tr>
             <td>Confirmation Number</td>
-            <td>{propsData?.bookingReceipt?.BookResult?.ConfirmationNo}</td>
+            <td>
+              {
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.ConfirmationNo
+              }
+            </td>
           </tr>
           <tr>
             <td>Booking Duration</td>
@@ -140,20 +181,27 @@ const HotelConfirmationReceipt = (props) => {
         <table>
           <tr>
             <td>Hotel</td>
-            <td>{hotelBookingDetails[0]?.HotelName}</td>
+            <td>
+              {
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.HotelName
+              }
+            </td>
           </tr>
           <tr>
             <td>Address</td>
             <td>
-              {hotelSearchOptions[0]?.CityName +
-                ", " +
-                hotelSearchOptions[0]?.StateProvince}
+              {`${hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult?.AddressLine1} ${hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult?.AddressLine2}
+              `}
             </td>
           </tr>
           <tr>
             <td>Room Type</td>
             <td>
-              {hotelBookingDetails[0]?.HotelRoomsDetails[0]?.RoomTypeName}
+              {
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.HotelRoomsDetails[0]?.RoomTypeName
+              }
             </td>
           </tr>
         </table>
@@ -166,25 +214,37 @@ const HotelConfirmationReceipt = (props) => {
           <tr>
             <td>Base Price</td>
             <td>
-              {hotelBookingDetails[0]?.HotelRoomsDetails[0]?.Price.RoomPrice}
+              {
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.HotelRoomsDetails[0]?.Price?.RoomPrice
+              }
             </td>
           </tr>
           <tr>
             <td>Taxes and Charges</td>
             <td>
-              {hotelBookingDetails[0]?.HotelRoomsDetails[0]?.Price?.Tax +
-                " + " +
-                hotelBookingDetails[0]?.HotelRoomsDetails[0]?.Price
-                  ?.OtherCharges}
+              {`${
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.HotelRoomsDetails[0]?.Price?.GST?.TaxableAmount
+              }(GST) + ${
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.HotelRoomsDetails[0]?.Price?.Tax
+              }(Tax) + ${(
+                +hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.HotelRoomsDetails[0]?.Price?.RoomPrice * +markup
+              ).toFixed(2)}(Agent Commission)`}
             </td>
           </tr>
           <tr>
             <td>Total</td>
             <td>
-              {
-                hotelBookingDetails[0]?.HotelRoomsDetails[0]?.Price
-                  ?.PublishedPriceRoundedOff
-              }
+              {(
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.HotelRoomsDetails[0]?.Price?.PublishedPrice +
+                hotelBookingData[0]?.bookingReceipt?.GetBookingDetailResult
+                  ?.HotelRoomsDetails[0]?.Price?.PublishedPrice *
+                  +markup
+              ).toFixed(2)}
             </td>
           </tr>
         </table>
