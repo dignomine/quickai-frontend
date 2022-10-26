@@ -221,7 +221,7 @@ const HotelPayment = (props) => {
 
     console.log(data.data?.BookResult?.Status);
 
-    if (data.data?.Status !== 1) {
+    if (data.data?.BookResult?.Status !== 1) {
       return alert("Error in booking");
     }
 

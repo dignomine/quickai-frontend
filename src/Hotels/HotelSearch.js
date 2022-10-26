@@ -216,7 +216,7 @@ const HotelSearch = () => {
         {
           NoOfAdults: adults,
           NoOfChild: children,
-          ChildAge: childrenAgeArray,
+          ChildAge: children === 0 ? [] : childrenAgeArray,
         },
       ],
       MaxRating: 5,
@@ -397,7 +397,10 @@ const HotelSearch = () => {
         <Header />
         <div id="content">
           <div class="hero-wrap">
-            <div class="hero-mask opacity-7 bg-primary"></div>
+            <div
+              class="hero-mask opacity-7 bg-primary"
+              style={{ backgroundColor: "#df293a !important" }}
+            ></div>
             <div
               class="hero-bg"
               style={{
@@ -3816,7 +3819,7 @@ const HotelSearch = () => {
                   data-items-xs="2"
                   data-items-sm="3"
                   data-items-md="4"
-                  data-items-lg="6"
+                  data-items-lg="4"
                   ref={parentRef}
                 >
                   <div class="item">
