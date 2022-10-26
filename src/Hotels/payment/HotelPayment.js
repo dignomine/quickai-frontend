@@ -221,6 +221,10 @@ const HotelPayment = (props) => {
 
     console.log(data.data?.BookResult?.Status);
 
+    if (data.data?.Status !== 1) {
+      return alert("Error in booking");
+    }
+
     const bookingDetailsObject = await axios.post(
       "/BookingEngineService_Hotel/HotelService.svc/rest/GetBookingDetail/",
       {
@@ -229,35 +233,6 @@ const HotelPayment = (props) => {
         BookingId: data.data?.BookResult?.BookingId,
       }
     );
-
-    const obj = {
-      Status: bookingDetailsObject?.data?.GetBookingDetailResult?.Status,
-      HotelBookingStatus:
-        bookingDetailsObject?.data?.GetBookingDetailResult?.HotelBookingStatus,
-      ConfirmationNo:
-        bookingDetailsObject?.data?.GetBookingDetailResult?.ConfirmationNo,
-      BookingRefNo:
-        bookingDetailsObject?.data?.GetBookingDetailResult?.BookingRefNo,
-      BookingId: bookingDetailsObject?.data?.GetBookingDetailResult?.BookingId,
-      TravellerDetails: {
-        firstname:
-          bookingDetailsObject?.data?.GetBookingDetailResult
-            ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.FirstName,
-        middlename:
-          bookingDetailsObject?.data?.GetBookingDetailResult
-            ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.MiddleName,
-        lastname:
-          bookingDetailsObject?.data?.GetBookingDetailResult
-            ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.LastName,
-        email:
-          bookingDetailsObject?.data?.GetBookingDetailResult
-            ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.Email,
-        phoneNumber:
-          bookingDetailsObject?.data?.GetBookingDetailResult
-            ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.Phoneno,
-      },
-    };
-    console.log(bookingDetailsObject, obj);
 
     const saveBookingToDatabase = await axios.post(
       "http://localhost:8000/booking/hotel",

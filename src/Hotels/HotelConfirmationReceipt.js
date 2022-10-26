@@ -6,6 +6,7 @@ import pdfMake from "pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import htmlToPdfmake from "html-to-pdfmake";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const HotelConfirmationReceipt = (props) => {
   const [propsData, setPropsData] = useState();
@@ -13,6 +14,7 @@ const HotelConfirmationReceipt = (props) => {
   const [hotelSearchOptions, setHotelSearchOptions] = useState([]);
   const [hotelBookingData, setHotelBookingData] = useState([]);
   const [markup, setMarkup] = useState(0);
+  const history = useHistory();
 
   function printDocument() {
     const doc = new jsPDF();
@@ -249,6 +251,15 @@ const HotelConfirmationReceipt = (props) => {
           </tr>
         </table>
       </div>
+
+      <button
+        className="downloadButton"
+        onClick={() => {
+          history.push("/hotelsearch", { replace: true });
+        }}
+      >
+        Go To Home
+      </button>
     </>
   );
 };
