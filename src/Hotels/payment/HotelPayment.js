@@ -230,38 +230,63 @@ const HotelPayment = (props) => {
       }
     );
 
+    const obj = {
+      Status: bookingDetailsObject?.data?.GetBookingDetailResult?.Status,
+      HotelBookingStatus:
+        bookingDetailsObject?.data?.GetBookingDetailResult?.HotelBookingStatus,
+      ConfirmationNo:
+        bookingDetailsObject?.data?.GetBookingDetailResult?.ConfirmationNo,
+      BookingRefNo:
+        bookingDetailsObject?.data?.GetBookingDetailResult?.BookingRefNo,
+      BookingId: bookingDetailsObject?.data?.GetBookingDetailResult?.BookingId,
+      TravellerDetails: {
+        firstname:
+          bookingDetailsObject?.data?.GetBookingDetailResult
+            ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.FirstName,
+        middlename:
+          bookingDetailsObject?.data?.GetBookingDetailResult
+            ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.MiddleName,
+        lastname:
+          bookingDetailsObject?.data?.GetBookingDetailResult
+            ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.LastName,
+        email:
+          bookingDetailsObject?.data?.GetBookingDetailResult
+            ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.Email,
+        phoneNumber:
+          bookingDetailsObject?.data?.GetBookingDetailResult
+            ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.Phoneno,
+      },
+    };
+    console.log(bookingDetailsObject, obj);
+
     const saveBookingToDatabase = await axios.post(
       "http://localhost:8000/booking/hotel",
       {
-        Status:
-          bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult?.Status,
+        Status: bookingDetailsObject?.data?.GetBookingDetailResult?.Status,
         HotelBookingStatus:
-          bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+          bookingDetailsObject?.data?.GetBookingDetailResult
             ?.HotelBookingStatus,
         ConfirmationNo:
-          bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
-            ?.ConfirmationNo,
+          bookingDetailsObject?.data?.GetBookingDetailResult?.ConfirmationNo,
         BookingRefNo:
-          bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
-            ?.BookingRefNo,
+          bookingDetailsObject?.data?.GetBookingDetailResult?.BookingRefNo,
         BookingId:
-          bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
-            ?.BookingId,
+          bookingDetailsObject?.data?.GetBookingDetailResult?.BookingId,
         TravellerDetails: {
           firstname:
-            bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+            bookingDetailsObject?.data?.GetBookingDetailResult
               ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.FirstName,
           middlename:
-            bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+            bookingDetailsObject?.data?.GetBookingDetailResult
               ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.MiddleName,
           lastname:
-            bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+            bookingDetailsObject?.data?.GetBookingDetailResult
               ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.LastName,
           email:
-            bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+            bookingDetailsObject?.data?.GetBookingDetailResult
               ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.Email,
           phoneNumber:
-            bookingDetailsObject?.bookingReceipt?.GetBookingDetailResult
+            bookingDetailsObject?.data?.GetBookingDetailResult
               ?.HotelRoomsDetails[0]?.HotelPassenger[0]?.Phoneno,
         },
       }

@@ -3,7 +3,7 @@ const validator = require("validator");
 
 const hotelBookingSchema = new mongoose.Schema(
   {
-    Status: String,
+    Status: Number,
     HotelBookingStatus: String,
     ConfirmationNo: {
       type: String,
